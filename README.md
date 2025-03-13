@@ -43,8 +43,8 @@ Follow these steps to set up the project locally:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/portfolio_2025.git
-   cd portfolio-website
+   git clone https://github.com/rupeshdahal07/portfolio_2025.git
+   cd portfolio_2025
 
 
 
