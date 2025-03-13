@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Developer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Unicons -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Typed.js -->
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <!-- ScrollReveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#0ea5e9',
+                        tertiary: '#14b8a6',
+                        dark: '#0f172a',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 15s linear infinite',
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': {
+                                transform: 'translate(0px, 0px) scale(1)',
+                                borderRadius: '60% 40% 30% 70%',
+                            },
+                            '33%': {
+                                transform: 'translate(30px, -50px) scale(1.1)',
+                                borderRadius: '40% 60% 70% 30%',
+                            },
+                            '66%': {
+                                transform: 'translate(-20px, 20px) scale(0.9)',
+                                borderRadius: '30% 70% 50% 50%',
+                            },
+                            '100%': {
+                                transform: 'translate(0px, 0px) scale(1)',
+                                borderRadius: '60% 40% 30% 70%',
+                            }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '25%': { transform: 'translateY(-10px) rotate(1deg)' },
+                            '50%': { transform: 'translateY(5px) rotate(-1deg)' },
+                            '75%': { transform: 'translateY(-5px) rotate(1deg)' },
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+    
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator"></div>
+    
+    <!-- Cursor trailer effect -->
+    <div class="cursor-trailer"></div>
+    
+    <!-- Header -->
+    <header class="fixed w-full top-0 left-0 z-50 py-4  glass-effect">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-gradient">Developer</a>
+            
+            <!-- Desktop menu -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="active-link">Home</a>
+                <a href="#about" class="hover:text-primary transition-colors">About</a>
+                <a href="#skills" class="hover:text-primary transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+            </nav>
+            
+            <!-- Theme toggle -->
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                <i class="uil uil-moon dark:hidden"></i>
+                <i class="uil uil-sun hidden dark:block"></i>
+            </button>
+            
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2">
+                <i class="uil uil-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col justify-center items-center space-y-8 transform translate-x-full transition-transform duration-300">
+            <button id="close-menu-btn" class="absolute top-5 right-5">
+                <i class="uil uil-times text-3xl"></i>
+            </button>
+            <a href="#home" class="text-xl hover:text-primary transition-colors">Home</a>
+            <a href="#about" class="text-xl hover:text-primary transition-colors">About</a>
+            <a href="#skills" class="text-xl hover:text-primary transition-colors">Skills</a>
+            <a href="#projects" class="text-xl hover:text-primary transition-colors">Projects</a>
+            <a href="#contact" class="text-xl hover:text-primary transition-colors">Contact</a>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="page-transition">
+        <!-- Hero section -->
+        <section id="home" class="min-h-screen flex items-center relative overflow-hidden pt-20 ">
+            <!-- Background blobs -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-primary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-secondary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+            
+            <div class="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
+                <div class="parallax" data-speed="0.1">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4">Hi, I'm <span class="text-gradient">Rupesh Dahal</span></h1>
+                    <h2 class="text-xl md:text-2xl mb-6">I'm a <span id="typed-text"></span></h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8">Aspiring backend developer with a passion for creating visually 
+                        appealing and user-friendly web applications.</p>
+                    <div class="flex space-x-4">
+                        <a href="#contact" class="btn-pulse ripple-btn px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center">
+                            <span>Contact Me</span>
+                            <i class="uil uil-arrow-right ml-2"></i>
+                        </a>
+                        <a href="#projects" class="px-6 py-3 border border-primary text-primary rounded-full hover:bg-primary hover:bg-opacity-10 transition-all flex items-center">
+                            <span>My Work</span>
+                            <i class="uil uil-briefcase ml-2"></i>
+                        </a>
+                    </div>
+                    <div class="flex space-x-4 mt-8">
+                        <a href="https://github.com/rupeshdahal07" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" target="_blank">
+                            <i class="uil uil-github text-2xl"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/rupesh-dahal/" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" target="_blank">
+                            <i class="uil uil-linkedin text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" target="_blank">
+                            <i class="uil uil-twitter text-2xl"></i>
+                        </a>
+                        <a href="mailto:rupyesdahal12@gmail.com" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors">
+                            <i class="uil uil-envelope text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Enhanced animated profile image -->
+                <div class="relative parallax profile-container" data-speed="0.2">
+                    <!-- Animated background elements -->
+                    <div class="profile-bg-element bg-element-1"></div>
+                    <div class="profile-bg-element bg-element-2"></div>
+                    <div class="profile-bg-element bg-element-3"></div>
+                    
+                    <!-- Animated border -->
+                    <div class="profile-border"></div>
+                    
+                    <!-- Profile image -->
+                    <div class="relative z-10 profile-image-wrapper">
+                        <img src="assets/images/avatar.jpg" alt="Profile" class="profile-image">
+                    </div>
+                    
+                    <!-- Floating badges -->
+                    <div class="profile-badge badge-1">
+                        <i class="uil uil-arrow text-xl"></i>
+                    </div>
+                    <div class="profile-badge badge-2">
+                        <i class="uil uil-code-branch text-xl"></i>
+                    </div>
+                    <div class="profile-badge badge-3">
+                        <i class="uil uil-brackets-curly text-xl"></i>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
+                <a href="#about" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors">
+                    <i class="uil uil-mouse-alt text-3xl"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- About section -->
+        <section id="about" class="py-20 relative">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-tertiary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+            
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">About Me</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="relative">
+                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-secondary opacity-20 rounded-xl filter blur-xl"></div>
+                        <img src="assets/images/rup.jpg" alt="About Me" class="relative z-10 rounded-full shadow-xl">
+                        <div class="absolute -bottom-5 -right-5 w-40 h-40 rotate-circle">
+                            <svg viewBox="0 0 200 200" width="120" height="120">
+                                <path fill="none" stroke="#6366f1" stroke-width="2" d="M100,10 A90,90 0 1,1 100,190 A90,90 0 1,1 100,10" />
+                                <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12" fill="#6366f1">Developer</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Back-end Developer</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">I'm a passionate back-end developer with a keen intrest in making backend system.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">With expertise in modern web technologies including Django/Django Rest, HTML, CSS, JavaScript. I bring designs to life with clean, efficient code and a focus on performance and accessibility.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div>
+                                <p><strong>Name:</strong> Rupesh Dahal</p>
+                                <p><strong>Email:</strong> rupyesdahal12@gmai.com</p>
+                                <p><strong>Location:</strong> Kathmandu, Nepal</p>
+                            </div>
+                            <div>
+                                <p><strong>Degree:</strong> Computer Science</p>
+                                <p><strong>Experience:</strong> Soon</p>
+                                <p><strong>Freelance:</strong> Available</p>
+                            </div>
+                        </div>
+                        
+                        <a href="assets/Rupesh Dahal_cv.pdf.pdf" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center w-max">
+                            <span>Download CV</span>
+                            <i class="uil uil-download-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills section -->
+        <section id="skills" class="skills-section">
+            <!-- Animated background elements -->
+            <div class="background-elements">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="floating-shape shape-3"></div>
+                <div class="floating-shape shape-4"></div>
+            </div>
+            
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">My Expertise</h2>
+                    <p class="section-subtitle">Blending creativity with technical precision</p>
+                </div>
+                
+                <div class="skills-categories">
+                    <!-- Development Skills -->
+                    <div class="skill-category">
+                        <h3 class="category-title">Development</h3>
+                        <div class="skills-container">
+                            <div class="skill-item" data-skill="html">
+                                <div class="skill-icon">
+                                    <div class="hexagon"></div>
+                                    <span class="skill-icon-text">&lt;/&gt;</span>
+                                </div>
+                                <div class="skill-info">
+                                    <h4>HTML/CSS</h4>
+                                    <div class="skill-level-bar">
+                                        <div class="skill-level" style="width: 95%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="skill-item" data-skill="JavaScript">
+                                <div class="skill-icon">
+                                    <div class="hexagon"></div>
+                                    <span class="skill-icon-text">JS</span>
+                                </div>
+                                <div class="skill-info">
+                                    <h4>JavaScript</h4>
+                                    <div class="skill-level-bar">
+                                        <div class="skill-level" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="skill-item" data-skill="Django">
+                                <div class="skill-icon">
+                                    <div class="hexagon"></div>
+                                    <span class="skill-icon-text">DRF</span>
+                                </div>
+                                <div class="skill-info">
+                                    <h4>Django/Django Rest Framework</h4>
+                                    <div class="skill-level-bar">
+                                        <div class="skill-level" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Design Skills -->
+                    <div class="skill-category">
+                        <h3 class="category-title">Tools</h3>
+                        <div class="skills-container">
+                            <div class="skill-item" data-skill="UX/UI">
+                                <div class="skill-icon">
+                                    <div class="hexagon"></div>
+                                    <span class="skill-icon-text">Git</span>
+                                </div>
+                                <div class="skill-info">
+                                    <h4>Git/GitHub</h4>
+                                    <div class="skill-level-bar">
+                                        <div class="skill-level" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="skill-item" data-skill="Figma">
+                                <div class="skill-icon">
+                                    <div class="hexagon"></div>
+                                    <span class="skill-icon-text">P</span>
+                                </div>
+                                <div class="skill-info">
+                                    <h4>Postman</h4>
+                                    <div class="skill-level-bar">
+                                        <div class="skill-level" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="skill-item" data-skill="CSS">
+                                <div class="skill-icon">
+                                    <div class="hexagon"></div>
+                                    <span class="skill-icon-text">F</span>
+                                </div>
+                                <div class="skill-info">
+                                    <h4>Figma</h4>
+                                    <div class="skill-level-bar">
+                                        <div class="skill-level" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Professional Skills -->
+                    <div class="skill-category">
+                        <h3 class="category-title">Professional</h3>
+                        <div class="skills-grid">
+                            <div class="pro-skill-item">
+                                <div class="skill-radar">
+                                    <div class="radar-circle"></div>
+                                    <div class="radar-level" style="--percent: 70"></div>
+                                </div>
+                                <p>Problem Solving</p>
+                            </div>
+                            
+                            <div class="pro-skill-item">
+                                <div class="skill-radar">
+                                    <div class="radar-circle"></div>
+                                    <div class="radar-level" style="--percent: 70"></div>
+                                </div>
+                                <p>Communication</p>
+                            </div>
+                            
+                            <div class="pro-skill-item">
+                                <div class="skill-radar">
+                                    <div class="radar-circle"></div>
+                                    <div class="radar-level" style="--percent: 69"></div>
+                                </div>
+                                <p>Teamwork</p>
+                            </div>
+                            
+                            <div class="pro-skill-item">
+                                <div class="skill-radar">
+                                    <div class="radar-circle"></div>
+                                    <div class="radar-level" style="--percent: 75"></div>
+                                </div>
+                                <p>Project Management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects section -->
+        <section id="projects" class="py-20 relative">
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-primary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+            
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">My Projects</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project 1 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover-card card-glow transition-all duration-300 tilt-card">
+                        <div class="relative">
+                            <img src="assets/images/ecommerce.png" alt="Project 1" class="w-full h-48 object-cover">
+                            <div class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-20 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <div class="flex space-x-4">
+                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                        <i class="uil uil-link"></i>
+                                    </a>
+                                    <a href="https://github.com/rupeshdahal07/Ecommerse-Website" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank">
+                                        <i class="uil uil-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">E-commerce Website</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">A modern e-commerce platform with product filtering, cart functionality, and secure checkout.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">HTML/CSS</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">Django</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">SQLite</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover-card card-glow transition-all duration-300 tilt-card">
+                        <div class="relative">
+                            <img src="assets/images/climateaction.png" alt="Project 2" class="w-full h-48 object-cover">
+                            <div class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-20 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <div class="flex space-x-4">
+                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                        <i class="uil uil-link"></i>
+                                    </a>
+                                    <a href="https://github.com/rupeshdahal07/climate_action" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank">
+                                        <i class="uil uil-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Climate Action</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">A productivity app with drag-and-drop interface, reminders, and task categorization.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">HTML</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">CSS</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">Javascript</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover-card card-glow transition-all duration-300 tilt-card">
+                        <div class="relative">
+                            <!-- https://via.placeholder.com/600x400 -->
+                            <img src="assets/images/portfolio.png" alt="Project 3" class="w-full h-48 object-cover">
+                            <div class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-20 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <div class="flex space-x-4">
+                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                        <i class="uil uil-link"></i>
+                                    </a>
+                                    <a href="https://github.com/rupeshdahal07/portfolio_2025" target="_blank" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                        <i class="uil uil-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Portfolio Website</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">A responsive portfolio website with modern animations and dark mode support.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">HTML/CSS</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">JavaScript</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">GSAP</span>
+                                <span class="px-3 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-sm">Tailwind</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all inline-flex items-center">
+                        <span>View All Projects</span>
+                        <i class="uil uil-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact section -->
+        <section id="contact" class="py-20 bg-gray-100 dark:bg-gray-800 relative">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-secondary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+            
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Get In Touch</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl">
+                                    <i class="uil uil-map-marker text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Location</h4>
+                                    <p class="text-gray-600 dark:text-gray-400">Kathmandu, Nepal</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl">
+                                    <i class="uil uil-envelope text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Email</h4>
+                                    <p class="text-gray-600 dark:text-gray-400">rupyesdahal12@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl">
+                                    <i class="uil uil-phone text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Phone</h4>
+                                    <p class="text-gray-600 dark:text-gray-400">+977-9813087083</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4 mt-8">
+                            <a href="https://github.com/rupeshdahal07" class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+                                <i class="uil uil-github text-xl"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/rupesh-dahal/" class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+                                <i class="uil uil-linkedin text-xl"></i>
+                            </a>
+                            <a href="#" class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+                                <i class="uil uil-twitter text-xl"></i>
+                            </a>
+                            <a href="https://www.instagram.com/rupesh.py/" class="p-3 bg-primary bg-opacity-10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+                                <i class="uil uil-instagram text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-8 shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Send Me a Message</h3>
+                        
+                        <form>
+                            <div class="mb-6">
+                                <label for="name" class="block mb-2 font-medium">Name</label>
+                                <input type="text" id="name" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Name">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="email" class="block mb-2 font-medium">Email</label>
+                                <input type="email" id="email" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Email">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="subject" class="block mb-2 font-medium">Subject</label>
+                                <input type="text" id="subject" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Subject">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block mb-2 font-medium">Message</label>
+                                <textarea id="message" rows="5" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Message"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all flex items-center justify-center">
+                                <span>Send Message</span>
+                                <i class="uil uil-message ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-gradient">Developer</h3>
+                    <p class="text-gray-400 mb-6">Creating elegant web solutions with a focus on user experience and performance.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/rupeshdahal07" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="uil uil-github text-xl"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/rupesh-dahal/" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="uil uil-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="uil uil-twitter text-xl"></i>
+                        </a>
+                        <a href="https://www.instagram.com/rupesh.py/" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="uil uil-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-primary transition-colors">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">About</a></li>
+                        <li><a href="#skills" class="text-gray-400 hover:text-primary transition-colors">Skills</a></li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-primary transition-colors">Projects</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-primary transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="uil uil-map-marker mr-2"></i>
+                            <span class="text-gray-400">Babarmahal-11, Kathmandu</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="uil uil-envelope mr-2"></i>
+                            <span class="text-gray-400">rupyesdahal12@gmail.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="uil uil-phone mr-2"></i>
+                            <span class="text-gray-400">+977-9813087083</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">© 2025 Rupesh Dahal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to top button -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-primary text-white rounded-full shadow-lg opacity-0 invisible transition-all z-50">
+        <i class="uil uil-arrow-up text-lg"></i>
+    </button>
+    
+    <!-- Scripts -->
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Page load animation
+            setTimeout(function() {
+                document.querySelector('.page-transition').classList.add('loaded');
+            }, 200);
+            
+            // Typed.js initialization
+            const typed = new Typed('#typed-text', {
+                strings: ['Backend Developer', 'CS Student', 'AI Enthusiast'],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true
+            });
+
+            
+
+            
+            // Skill bar animation
+                // JavaScript to handle animations and counters
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Intersection Observer for revealing skills when scrolled into view
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('in-view');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.2 });
+                    
+                    // Observe the skills section
+                    const skillsSection = document.querySelector('.skills-section');
+                    observer.observe(skillsSection);
+                    
+                    // Set tooltips for skill bars
+                    const skillLevelBars = document.querySelectorAll('.skill-level-bar');
+                    skillLevelBars.forEach(bar => {
+                        const level = bar.querySelector('.skill-level');
+                        const width = level.style.width;
+                        bar.setAttribute('data-tooltip', width);
+                    });
+                    
+                    // Optional: Add a counter animation for the professional skills
+                    const countElements = document.querySelectorAll('.radar-level');
+                    countElements.forEach(element => {
+                        const percent = element.style.getPropertyValue('--percent');
+                        const parent = element.closest('.pro-skill-item');
+                        const percentDisplay = document.createElement('span');
+                        percentDisplay.className = 'percent-display';
+                        percentDisplay.textContent = '0%';
+                        percentDisplay.style.position = 'absolute';
+                        percentDisplay.style.top = '50%';
+                        percentDisplay.style.left = '50%';
+                        percentDisplay.style.transform = 'translate(-50%, -50%)';
+                        percentDisplay.style.color = '#fff';
+                        percentDisplay.style.fontSize = '0.875rem';
+                        percentDisplay.style.fontWeight = 'bold';
+                        percentDisplay.style.zIndex = '2';
+                        
+                        element.parentNode.appendChild(percentDisplay);
+                        
+                        let current = 0;
+                        const interval = setInterval(() => {
+                            if (current >= percent) {
+                                clearInterval(interval);
+                            } else {
+                                current += 1;
+                                percentDisplay.textContent = `${current}%`;
+                            }
+                        }, 20);
+                    });
+                });
+
+
+
+
+            
+            // ScrollReveal initialization
+            const sr = ScrollReveal({
+                origin: 'bottom',
+                distance: '60px',
+                duration: 1000,
+                delay: 200,
+                reset: false
+            });
+            
+            sr.reveal('.container > div', {interval: 200});
+            sr.reveal('.card', {interval: 200});
+            sr.reveal('h2', {delay: 0});
+            sr.reveal('p', {delay: 300});
+            
+            // Parallax effect for elements with data-speed attribute
+            window.addEventListener('scroll', function() {
+                const parallaxElements = document.querySelectorAll('.parallax');
+                parallaxElements.forEach(element => {
+                    const speed = element.dataset.speed || 0.1;
+                    const yPos = -(window.pageYOffset * speed);
+                    element.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+            
+            // Nav link highlight on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('header nav a');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active-link');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active-link');
+                    }
+                });
+            });
+            
+            // 3D tilt effect for cards
+            const tiltCards = document.querySelectorAll('.tilt-card');
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const cardRect = card.getBoundingClientRect();
+                    const centerX = cardRect.left + cardRect.width / 2;
+                    const centerY = cardRect.top + cardRect.height / 2;
+                    const posX = e.clientX - centerX;
+                    const posY = e.clientY - centerY;
+                    
+                    const rotateX = posY * -0.05;
+                    const rotateY = posX * 0.05;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                });
+            });
+            
+            // Theme toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+            
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                htmlElement.classList.add('dark');
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                htmlElement.classList.toggle('dark');
+                localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
+            });
+            
+            // Mobile menu
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.add('translate-x-0');
+            });
+            
+            closeMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+            });
+            
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
+                });
+            });
+            
+            // Back to top button
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.remove('opacity-0', 'invisible');
+                    backToTopBtn.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopBtn.classList.remove('opacity-100', 'visible');
+                    backToTopBtn.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Scroll indicator
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                scrollIndicator.style.width = scrolled + '%';
+            });
+            
+            // Mouse cursor trailer effect
+            const cursorTrailer = document.querySelector('.cursor-trailer');
+            const links = document.querySelectorAll('a, button');
+            
+            if (window.innerWidth > 768) {
+                cursorTrailer.style.display = 'block';
+                
+                document.addEventListener('mousemove', (e) => {
+                    cursorTrailer.style.left = e.clientX + 'px';
+                    cursorTrailer.style.top = e.clientY + 'px';
+                });
+                
+                links.forEach(link => {
+                    link.addEventListener('mouseenter', () => {
+                        cursorTrailer.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                        cursorTrailer.style.backgroundColor = 'rgba(99, 102, 241, 0.3)';
+                    });
+                    
+                    link.addEventListener('mouseleave', () => {
+                        cursorTrailer.style.transform = 'translate(-50%, -50%) scale(1)';
+                        cursorTrailer.style.backgroundColor = 'rgba(99, 102, 241, 0.5)';
+                    });
+                });
+            }
+            
+            // Contact form
+            const contactForm = document.querySelector('form');
+            
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Form validation logic here
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                if (name && email && subject && message) {
+                    // Here you would typically send the form data to a server
+                    alert('Thank you for your message! I will get back to you soon.');
+                    contactForm.reset();
+                } else {
+                    alert('Please fill in all fields.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
