@@ -194,53 +194,118 @@
             </div>
         </section>
 
-        <!-- About section -->
-        <section id="about" class="py-20 relative">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-tertiary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
-            
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">About Me</h2>
-                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+<!-- About section -->
+<section id="about" class="py-20 relative overflow-hidden">
+    <!-- Enhanced background elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-tertiary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+    <div class="absolute bottom-0 left-0 w-72 h-72 bg-primary opacity-10 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
+    
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">About <span class="text-gradient">Me</span></h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+        </div>
+        
+        <!-- New card-based layout -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+            <div class="grid md:grid-cols-5 gap-0">
+                <!-- Image column with improved styling -->
+                <div class="md:col-span-2 relative group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-50 transition-all duration-500 group-hover:opacity-80"></div>
+                    <img src="assets/images/rup.jpg" alt="About Me" class="w-full h-full object-cover object-center">
+                    
+                    <!-- Floating details -->
+                    <div class="absolute top-8 left-8 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <div class="flex items-center gap-3">
+                            <i class="uil uil-user-circle text-primary text-2xl"></i>
+                            <div>
+                                <h4 class="font-bold">Name</h4>
+                                <p class="text-gray-600 dark:text-gray-400">Rupesh Dahal</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute bottom-8 left-8 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg transform rotate-negative-3 hover:rotate-0 transition-transform duration-300">
+                        <div class="flex items-center gap-3">
+                            <i class="uil uil-location-point text-primary text-2xl"></i>
+                            <div>
+                                <h4 class="font-bold">Location</h4>
+                                <p class="text-gray-600 dark:text-gray-400">Kathmandu, Nepal</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Animated badge -->
+                    <div class="absolute -top-3 -right-3 bg-primary text-white rounded-full h-24 w-24 flex items-center justify-center transform rotate-12 shadow-lg animate-pulse">
+                        <div class="text-center">
+                            <div class="font-bold">Backend</div>
+                            <div class="text-xs">Developer</div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div class="relative">
-                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-secondary opacity-20 rounded-xl filter blur-xl"></div>
-                        <img src="assets/images/rup.jpg" alt="About Me" class="relative z-10 rounded-full shadow-xl">
-                        <div class="absolute -bottom-5 -right-5 w-40 h-40 rotate-circle">
-                            <svg viewBox="0 0 200 200" width="120" height="120">
-                                <path fill="none" stroke="#6366f1" stroke-width="2" d="M100,10 A90,90 0 1,1 100,190 A90,90 0 1,1 100,10" />
-                                <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12" fill="#6366f1">Developer</text>
-                            </svg>
+                <!-- Content column with better typography and layout -->
+                <div class="md:col-span-3 p-8 md:p-12">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="uil uil-brackets-curly text-primary mr-2"></i>
+                        Backend Developer
+                    </h3>
+                    
+                    <p class="text-gray-600 dark:text-gray-400 mb-6 border-l-4 border-primary pl-4 italic">
+                        I'm a passionate backend developer with a keen interest in building robust and scalable systems.
+                    </p>
+                    
+                    <p class="text-gray-600 dark:text-gray-400 mb-8">
+                        With expertise in modern web technologies including Django/Django Rest, HTML, CSS, JavaScript. 
+                        I bring designs to life with clean, efficient code and a focus on performance and accessibility.
+                    </p>
+                    
+                    <!-- Skills tabs -->
+                    <div class="mb-8">
+                        <div class="flex flex-wrap gap-3 mb-4">
+                            <span class="px-4 py-2 bg-primary bg-opacity-10 text-primary rounded-full text-sm hover:bg-opacity-20 transition-all cursor-default">
+                                <i class="uil uil-django mr-1"></i> Django
+                            </span>
+                            <span class="px-4 py-2 bg-primary bg-opacity-10 text-primary rounded-full text-sm hover:bg-opacity-20 transition-all cursor-default">
+                                <i class="uil uil-server mr-1"></i> REST API
+                            </span>
+                            <span class="px-4 py-2 bg-primary bg-opacity-10 text-primary rounded-full text-sm hover:bg-opacity-20 transition-all cursor-default">
+                                <i class="uil uil-database mr-1"></i> SQL
+                            </span>
+                            <span class="px-4 py-2 bg-primary bg-opacity-10 text-primary rounded-full text-sm hover:bg-opacity-20 transition-all cursor-default">
+                                <i class="uil uil-html5 mr-1"></i> HTML/CSS
+                            </span>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">Back-end Developer</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">I'm a passionate back-end developer with a keen intrest in making backend system.</p>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">With expertise in modern web technologies including Django/Django Rest, HTML, CSS, JavaScript. I bring designs to life with clean, efficient code and a focus on performance and accessibility.</p>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-8">
-                            <div>
-                                <p><strong>Name:</strong> Rupesh Dahal</p>
-                                <p><strong>Email:</strong> rupyesdahal12@gmai.com</p>
-                                <p><strong>Location:</strong> Kathmandu, Nepal</p>
-                            </div>
-                            <div>
-                                <p><strong>Degree:</strong> Computer Science</p>
-                                <p><strong>Experience:</strong> Soon</p>
-                                <p><strong>Freelance:</strong> Available</p>
-                            </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <h4 class="font-semibold text-primary mb-2">Education</h4>
+                            <p><i class="uil uil-graduation-cap mr-2"></i>Computer Science</p>
                         </div>
-                        
-                        <a href="assets/Rupesh Dahal_cv.pdf.pdf" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center w-max">
-                            <span>Download CV</span>
-                            <i class="uil uil-download-alt ml-2"></i>
-                        </a>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <h4 class="font-semibold text-primary mb-2">Experience</h4>
+                            <p><i class="uil uil-briefcase mr-2"></i>Soon</p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <h4 class="font-semibold text-primary mb-2">Email</h4>
+                            <p><i class="uil uil-envelope mr-2"></i>rupyesdahal12@gmail.com</p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <h4 class="font-semibold text-primary mb-2">Freelance</h4>
+                            <p><i class="uil uil-check mr-2"></i>Available</p>
+                        </div>
                     </div>
+                    
+                    <a href="assets/Rupesh Dahal_cv.pdf.pdf" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center w-max shadow-lg transform hover:-translate-y-1 hover:shadow-xl">
+                        <span>Download CV</span>
+                        <i class="uil uil-download-alt ml-2"></i>
+                    </a>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
 
         <!-- Skills section -->
         <section id="skills" class="skills-section">
@@ -483,7 +548,7 @@
                 </div>
                 
                 <div class="text-center mt-12">
-                    <a href="#" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all inline-flex items-center">
+                    <a href="projects.html" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all inline-flex items-center">
                         <span>View All Projects</span>
                         <i class="uil uil-arrow-right ml-2"></i>
                     </a>
