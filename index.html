@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rupesh | Portfolio</title>
-    <!-- --------- FAVICON ---------- -->
+    <!-- Favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.jpg" type="image/x-icon">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,11 +21,13 @@
     <script src="https://unpkg.com/scrollreveal"></script>
     <!-- GSAP for advanced animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    
     <script>
         tailwind.config = {
             theme: {
+                fontFamily: {
+                    'sans': ['Poppins', 'sans-serif'],
+                },
                 extend: {
                     colors: {
                         primary: '#6366f1',
@@ -38,6 +40,10 @@
                         'blob': 'blob 7s infinite',
                         'float': 'float 6s ease-in-out infinite',
                         'bounce-slow': 'bounce 3s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'border-pulse': 'borderPulse 3s infinite',
+                        'morph': 'morph 10s linear infinite',
+                        'badge-float': 'badgeFloat 6s ease-in-out infinite',
                     },
                     keyframes: {
                         blob: {
@@ -59,164 +65,435 @@
                             }
                         },
                         float: {
-                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-                            '25%': { transform: 'translateY(-10px) rotate(1deg)' },
-                            '50%': { transform: 'translateY(5px) rotate(-1deg)' },
-                            '75%': { transform: 'translateY(-5px) rotate(1deg)' },
-                        }
-                    }
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        morph: {
+                            '0%, 100%': { borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' },
+                            '25%': { borderRadius: '58% 42% 75% 25% / 76% 46% 54% 24%' },
+                            '50%': { borderRadius: '50% 50% 33% 67% / 55% 27% 73% 45%' },
+                            '75%': { borderRadius: '33% 67% 58% 42% / 63% 68% 32% 37%' },
+                        },
+                        borderPulse: {
+                            '0%, 100%': { borderColor: 'rgba(99, 102, 241, 0.3)' },
+                            '50%': { borderColor: 'rgba(99, 102, 241, 0.6)' },
+                        },
+                        badgeFloat: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-10px) scale(1.05)' },
+                        },
+                    },
+                    backdropBlur: {
+                        xs: '2px',
+                    },
+                    screens: {
+                        'xs': '480px',
+                    },
                 },
             },
         };
     </script>
     
-</head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-    <!-- Scroll indicator -->
-    <div class="scroll-indicator"></div>
-    
-    <!-- Cursor trailer effect -->
-    <div class="cursor-trailer"></div>
-    
-    <!-- Header -->
-    <header class="fixed w-full top-0 left-0 z-50 py-4  glass-effect">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-gradient">Developer</a>
-            
-            <!-- Desktop menu -->
-            <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="active-link">Home</a>
-                <a href="#about" class="hover:text-primary transition-colors">About</a>
-                <a href="#skills" class="hover:text-primary transition-colors">Skills</a>
-                <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
-                <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
-            </nav>
-            
-            <!-- Theme toggle -->
-            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
-                <i class="uil uil-moon dark:hidden"></i>
-                <i class="uil uil-sun hidden dark:block"></i>
-            </button>
-            
-            <!-- Mobile menu button -->
-            <button id="mobile-menu-btn" class="md:hidden p-2">
-                <i class="uil uil-bars text-2xl"></i>
-            </button>
-        </div>
+    <style>
+        /* Minimal base styles */
+        body { font-family: 'Poppins', sans-serif; }
         
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col justify-center items-center space-y-8 transform translate-x-full transition-transform duration-300">
-            <button id="close-menu-btn" class="absolute top-5 right-5">
-                <i class="uil uil-times text-3xl"></i>
-            </button>
-            <a href="#home" class="text-xl hover:text-primary transition-colors">Home</a>
-            <a href="#about" class="text-xl hover:text-primary transition-colors">About</a>
-            <a href="#skills" class="text-xl hover:text-primary transition-colors">Skills</a>
-            <a href="#projects" class="text-xl hover:text-primary transition-colors">Projects</a>
-            <a href="#contact" class="text-xl hover:text-primary transition-colors">Contact</a>
+        /* Gradient text utility class */
+        .bg-gradient-text {
+            @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-tertiary;
+        }
+    </style>
+    <style>
+        /* Add these styles to fix mobile menu */
+        #mobile-menu {
+            height: 100vh; /* Ensure full height */
+            z-index: 9999 !important;
+        }
+        
+        #mobile-menu .relative {
+            max-height: 100vh;
+            overflow-y: auto; /* Enable scrolling for menu content */
+        }
+        
+        /* Fix for iOS Safari 100vh issue */
+        @supports (-webkit-touch-callout: none) {
+            #mobile-menu, #mobile-menu .relative {
+                height: -webkit-fill-available;
+            }
+        }
+        
+        /* Fix for the menu animation on mobile */
+        .mobile-menu-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <!-- Scroll indicator -->
+    <div class="fixed top-0 left-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary z-50" id="scroll-indicator"></div>
+    
+    <!-- Cursor trailer effect - only visible on desktop -->
+    <div class="hidden md:block fixed w-5 h-5 bg-primary bg-opacity-50 rounded-full pointer-events-none z-[9999] transition-transform duration-100 ease-linear transform -translate-x-1/2 -translate-y-1/2" id="cursor-trailer"></div>
+    
+<!-- Replace your current header with this modern version -->
+
+<!-- Modern Header -->
+<header class="fixed w-full top-0 left-0 z-50 transition-all duration-300" id="main-header">
+  <div class="container mx-auto px-4 py-3 md:py-4">
+    <div class="bg-white/10 dark:bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-gray-700/30 shadow-lg flex justify-between items-center px-4 py-3 md:px-6">
+      <!-- Logo -->
+      <a href="#" class="flex items-center space-x-2 group">
+        <div class="h-9 w-9 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-white font-bold text-xl rotate-12 group-hover:rotate-0 transition-transform duration-300">R</div>
+        <span class="text-xl font-bold bg-gradient-text hidden sm:inline-block">Developer</span>
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center">
+        <div class="relative bg-white/5 dark:bg-gray-800/20 backdrop-blur-sm rounded-full p-1 border border-white/10 dark:border-gray-700/30">
+          <div class="flex space-x-1">
+            <a href="#home" class="nav-link px-4 py-1.5 rounded-full transition-colors relative">Home</a>
+            <a href="#about" class="nav-link px-4 py-1.5 rounded-full transition-colors">About</a>
+            <a href="#skills" class="nav-link px-4 py-1.5 rounded-full transition-colors">Skills</a>
+            <a href="#projects" class="nav-link px-4 py-1.5 rounded-full transition-colors">Projects</a>
+            <a href="#contact" class="nav-link px-4 py-1.5 rounded-full transition-colors">Contact</a>
+          </div>
+          <!-- Active indicator that moves based on current section -->
+          <div id="nav-indicator" class="absolute top-1 left-1 h-7 bg-white/20 dark:bg-primary/20 rounded-full transition-all duration-300" style="width: 70px; transform: translateX(0);"></div>
         </div>
-    </header>
+      </nav>
+      
+      <!-- Right Side Actions -->
+      <div class="flex items-center space-x-2">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="p-2 rounded-full bg-gray-100/30 dark:bg-gray-800/30 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 backdrop-blur-sm transition-colors border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+        
+        <!-- Contact Button (visible on larger screens) -->
+        <a href="#contact" class="hidden sm:flex items-center px-4 py-1.5 bg-gradient-to-r from-primary to-secondary text-white rounded-full text-sm font-medium hover:shadow-lg hover:shadow-primary/20 transition-all">
+          <span>Contact</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+        
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full bg-gray-100/30 dark:bg-gray-800/30 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 backdrop-blur-sm transition-colors border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+<!-- Replace your current mobile menu with this enhanced version -->
+
+<!-- Modern Mobile Menu - positioned outside the header -->
+<div id="mobile-menu" class="fixed inset-0 z-[9999] transform translate-x-full transition-all duration-500 ease-in-out">
+  <!-- Backdrop with blur -->
+  <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-md"></div>
+  
+  <!-- Menu content - adjust height and scrolling -->
+  <div class="relative h-full w-full md:w-80 ml-auto bg-white dark:bg-gray-900 shadow-2xl flex flex-col overflow-auto">
+    <!-- Header area -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-white font-bold text-xl">R</div>
+        <span class="text-xl font-bold">Rupesh Dahal</span>
+      </div>
+      <button id="close-menu-btn" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Navigation links -->
+    <nav class="flex-1 overflow-y-auto p-6">
+      <div class="space-y-1">
+        <a href="#home" class="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all duration-200 group">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+            <i class="uil uil-estate text-xl"></i>
+          </div>
+          <span class="text-lg font-medium">Home</span>
+        </a>
+        
+        <a href="#about" class="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all duration-200 group">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+            <i class="uil uil-user text-xl"></i>
+          </div>
+          <span class="text-lg font-medium">About</span>
+        </a>
+        
+        <a href="#skills" class="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all duration-200 group">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+            <i class="uil uil-bolt text-xl"></i>
+          </div>
+          <span class="text-lg font-medium">Skills</span>
+        </a>
+        
+        <a href="#projects" class="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all duration-200 group">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+            <i class="uil uil-briefcase-alt text-xl"></i>
+          </div>
+          <span class="text-lg font-medium">Projects</span>
+        </a>
+        
+        <a href="#contact" class="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all duration-200 group">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+            <i class="uil uil-envelope text-xl"></i>
+          </div>
+          <span class="text-lg font-medium">Contact</span>
+        </a>
+      </div>
+      
+      <!-- Theme toggle switch -->
+      <div class="mt-8 p-4 rounded-xl bg-gray-100 dark:bg-gray-800/60">
+        <div class="flex items-center justify-between">
+          <span class="font-medium">Dark Mode</span>
+          <button id="mobile-theme-toggle" class="w-12 h-6 rounded-full bg-gray-300 dark:bg-gray-700 relative transition-colors duration-300">
+            <span class="absolute w-5 h-5 rounded-full bg-white left-0.5 top-0.5 transform transition-transform duration-300 dark:translate-x-6"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Social links and footer -->
+    <div class="p-6 border-t border-gray-200 dark:border-gray-800">
+      <!-- Social links with text -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <a href="https://github.com/rupeshdahal07" target="_blank" class="flex items-center gap-2 p-2 text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+          <i class="uil uil-github text-xl"></i>
+          <span>GitHub</span>
+        </a>
+        
+        <a href="https://www.linkedin.com/in/rupesh-dahal/" target="_blank" class="flex items-center gap-2 p-2 text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+          <i class="uil uil-linkedin text-xl"></i>
+          <span>LinkedIn</span>
+        </a>
+        
+        <a href="mailto:rupyesdahal12@gmail.com" class="flex items-center gap-2 p-2 text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+          <i class="uil uil-envelope text-xl"></i>
+          <span>Email</span>
+        </a>
+        
+        <a href="https://www.instagram.com/rupesh.py/" target="_blank" class="flex items-center gap-2 p-2 text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+          <i class="uil uil-instagram text-xl"></i>
+          <span>Instagram</span>
+        </a>
+      </div>
+      
+      <!-- Contact button -->
+      <a href="#contact" class="block w-full py-3 bg-gradient-to-r from-primary to-secondary text-white text-center rounded-lg font-medium hover:opacity-90 transition-opacity">
+        Let's Talk
+      </a>
+    </div>
+  </div>
+</div>
+</header>
 
     <!-- Main content -->
-    <main class="page-transition">
-        <!-- Hero section -->
-        <section id="home" class="min-h-screen flex items-center relative overflow-hidden pt-16 md:pt-20">
-            <!-- Background blobs with responsive sizing -->
-            <div class="absolute top-0 right-0 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-primary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
-            <div class="absolute bottom-0 left-0 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-secondary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
-            
-            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                <!-- Text content with improved responsiveness -->
-                <div class="parallax text-center md:text-left" data-speed="0.1">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4">
-                        Hi, I'm <span class="text-gradient">Rupesh Dahal</span>
-                    </h1>
-                    <h2 class="text-lg sm:text-xl md:text-2xl mb-4 md:mb-6">I'm a <span id="typed-text"></span></h2>
-                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 md:mb-8 max-w-lg mx-auto md:mx-0">
-                        Aspiring backend developer with a passion for creating visually 
-                        appealing and user-friendly web applications.
-                    </p>
-                    
-                    <!-- Responsive buttons -->
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
-                        <a href="#contact" class="btn-pulse ripple-btn px-5 py-2.5 sm:px-6 sm:py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center justify-center sm:justify-start text-sm sm:text-base">
-                            <span>Contact Me</span>
-                            <i class="uil uil-arrow-right ml-2"></i>
-                        </a>
-                        <a href="#projects" class="px-5 py-2.5 sm:px-6 sm:py-3 border border-primary text-primary rounded-full hover:bg-primary hover:bg-opacity-10 transition-all flex items-center justify-center sm:justify-start text-sm sm:text-base">
-                            <span>My Work</span>
-                            <i class="uil uil-briefcase ml-2"></i>
-                        </a>
-                    </div>
-                    
-                    <!-- Social links with better spacing on mobile -->
-                    <div class="flex space-x-4 mt-6 sm:mt-8 justify-center md:justify-start">
-                        <a href="https://github.com/rupeshdahal07" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" target="_blank">
-                            <i class="uil uil-github text-xl sm:text-2xl"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/rupesh-dahal/" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" target="_blank">
-                            <i class="uil uil-linkedin text-xl sm:text-2xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" target="_blank">
-                            <i class="uil uil-twitter text-xl sm:text-2xl"></i>
-                        </a>
-                        <a href="mailto:rupyesdahal12@gmail.com" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors">
-                            <i class="uil uil-envelope text-xl sm:text-2xl"></i>
-                        </a>
-                    </div>
+    <main class="opacity-0 translate-y-5 transition-all duration-200" id="main-content">
+       <!-- Modern Hero Section with 3D elements and enhanced animations -->
+        <section id="home" class="min-h-screen relative flex items-center overflow-hidden pt-20 pb-10 md:pt-28 md:pb-16">
+        <!-- Animated background elements -->
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute top-20 right-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl animate-blob"></div>
+            <div class="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-secondary/10 blur-3xl animate-blob animation-delay-2000"></div>
+            <div class="absolute top-1/2 left-1/3 w-64 h-64 rounded-full bg-tertiary/10 blur-3xl animate-blob animation-delay-4000"></div>
+        </div>
+
+        <!-- Grid pattern background -->
+        <div class="absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.02]" 
+            style="background-image: radial-gradient(#6366f1 0.5px, transparent 0.5px); background-size: 15px 15px;"></div>
+        
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-12 items-center">
+            <!-- Content area (wider on desktop) -->
+            <div class="lg:col-span-3 text-center lg:text-left" data-aos="fade-right">
+                <!-- Subtle highlight tag -->
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary mb-5 text-sm font-medium">
+                <span class="animate-pulse mr-2 w-2 h-2 rounded-full bg-primary"></span>
+                <span>Backend Developer</span>
                 </div>
                 
-                <!-- Enhanced animated profile image with responsive adjustments -->
-                <div class="relative parallax profile-container mt-8 md:mt-0 mx-auto md:mx-0 max-w-xs sm:max-w-sm md:max-w-none" data-speed="0.2">
-                    <!-- Animated background elements - hidden on smallest screens -->
-                    <div class="profile-bg-element bg-element-1 hidden xs:block"></div>
-                    <div class="profile-bg-element bg-element-2 hidden xs:block"></div>
-                    <div class="profile-bg-element bg-element-3 hidden xs:block"></div>
-                    
-                    <!-- Animated border -->
-                    <div class="profile-border"></div>
-                    
-                    <!-- Profile image -->
-                    <div class="relative z-10 profile-image-wrapper">
-                        <img src="assets/images/avatar.jpg" alt="Profile" class="profile-image w-full h-full object-cover">
+                <!-- Main heading with creative typography -->
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+                Hi, I'm 
+                <span class="relative inline-block animate-text bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">
+                    Rupesh
+                    <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary to-tertiary opacity-70 rounded"></span>
+                </span>
+                </h1>
+                
+                <!-- Dynamic typed text with improved styling -->
+                <div class="flex flex-col sm:flex-row text-xl sm:text-2xl lg:text-3xl items-center justify-center lg:justify-start font-light mb-6 text-gray-700 dark:text-gray-300">
+                <span class="mr-2">></span>
+                <span id="typed-text" class="text-primary font-medium"></span>
+                </div>
+                
+                <!-- Description with improved length and clarity -->
+                <p class="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto lg:mx-0 mb-8">
+                Transforming ideas into elegant digital experiences. Specializing in backend development with a passion for clean code and intuitive design.
+                </p>
+                
+                <!-- Action buttons with enhanced styling -->
+                <div class="flex flex-wrap gap-4 justify-center lg:justify-start mb-10">
+                <a href="#contact" class="group relative inline-flex items-center px-6 py-3 overflow-hidden rounded-full bg-gradient-to-r from-primary to-secondary text-white shadow-lg hover:shadow-primary/30 transition-all duration-300">
+                    <span class="relative z-10 flex items-center">
+                    Let's Talk
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                    </span>
+                    <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></span>
+                </a>
+                
+                <a href="#projects" class="group inline-flex items-center px-6 py-3 rounded-full border-2 border-primary text-primary hover:bg-primary/5 transition-colors">
+                    <span>View Work</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+                </div>
+                
+                <!-- Tech stack indicators -->
+                <div class="hidden lg:flex items-center space-x-6 text-gray-500 dark:text-gray-400 text-sm">
+                <span>Tech Stack</span>
+                <div class="h-px flex-grow bg-gray-200 dark:bg-gray-700"></div>
+                <div class="flex space-x-4">
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="Python" />
                     </div>
-                    
-                    <!-- Floating badges - fewer on mobile -->
-                    <div class="profile-badge badge-1 hidden sm:flex">
-                        <i class="uil uil-arrow text-lg sm:text-xl"></i>
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="Django" />
                     </div>
-                    <div class="profile-badge badge-2">
-                        <i class="uil uil-code-branch text-lg sm:text-xl"></i>
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="HTML5" />
                     </div>
-                    <div class="profile-badge badge-3 hidden sm:flex">
-                        <i class="uil uil-brackets-curly text-lg sm:text-xl"></i>
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="CSS3" />
                     </div>
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="JavaScript" />
+                    </div>
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="JavaScript" />
+                    </div>
+                    <div class="group flex flex-col items-center gap-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-6 h-6 grayscale group-hover:grayscale-0 transition-all" alt="JavaScript" />
+                    </div>
+                </div>
                 </div>
             </div>
             
-            <!-- Scroll indicator - hidden on very small screens -->
-            <div class="absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce-slow hidden xs:block">
-                <a href="#about" class="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors">
-                    <i class="uil uil-mouse-alt text-2xl sm:text-3xl"></i>
+            <!-- Profile image area with 3D effect (narrower on desktop) -->
+            <div class="lg:col-span-2 relative" data-aos="fade-left" data-aos-delay="200">
+                <!-- 3D card container -->
+                <div class="perspective-1000">
+                <div class="profile-card transform transition-all duration-500 hover:-rotate-y-12 hover:scale-105">
+                    <!-- Main profile image with advanced styling -->
+                    <div class="relative w-full max-w-sm mx-auto aspect-square">
+                    <!-- Glowing background elements -->
+                    <div class="absolute w-full h-full rounded-3xl overflow-hidden -z-10">
+                        <div class="absolute w-40 h-40 bg-primary/30 -top-10 -right-10 rounded-full blur-2xl"></div>
+                        <div class="absolute w-40 h-40 bg-secondary/30 -bottom-10 -left-10 rounded-full blur-2xl"></div>
+                    </div>
+                    
+                    <!-- Card frame -->
+                    <div class="absolute inset-0 rounded-3xl border border-white/20 backdrop-blur-sm bg-white/10 dark:bg-gray-900/50 shadow-xl z-0 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                    </div>
+                    
+                    <!-- Profile image container -->
+                    <div class="absolute inset-4 rounded-2xl overflow-hidden z-10 shadow-lg">
+                        <img 
+                        src="assets/images/avatar.jpg" 
+                        alt="Rupesh Dahal" 
+                        class="w-full h-full object-cover animate-morph"
+                        >
+                    </div>
+                    
+                    <!-- Decorative elements -->
+                    <div class="absolute -top-3 -left-3 bg-white dark:bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center z-20 shadow-lg">
+                        <div class="bg-gradient-to-r from-primary to-secondary w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl">R</div>
+                    </div>
+                    
+                    <!-- Tech badges -->
+                    <div class="absolute -bottom-3 -right-3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg z-20 flex items-center">
+                        <i class="uil uil-code-branch text-primary mr-1.5"></i>
+                        <span class="text-sm font-medium">Developer</span>
+                    </div>
+                    
+                    <!-- Floating tech icons -->
+                    <div class="absolute top-5 right-5 w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-lg z-20 hover:scale-110 transition-transform animate-float">
+                        <i class="uil uil-brackets-curly text-primary"></i>
+                    </div>
+                    
+                    <div class="absolute bottom-20 left-5 w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-lg z-20 hover:scale-110 transition-transform animate-float" style="animation-delay: 1s;">
+                        <i class="uil uil-server text-secondary"></i>
+                    </div>
+                    
+                    <!-- Card shine effect -->
+                    <div class="absolute inset-0 rounded-3xl opacity-0 hover:opacity-30 bg-gradient-to-tr from-white to-transparent transition-opacity z-30 pointer-events-none"></div>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Social links -->
+                <div class="flex justify-center space-x-5 mt-6">
+                <a href="https://github.com/rupeshdahal07" target="_blank" class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 dark:bg-gray-800/30 dark:border-gray-700/30 hover:bg-primary/20 transition-colors">
+                    <i class="uil uil-github text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors"></i>
                 </a>
+                <a href="https://www.linkedin.com/in/rupesh-dahal/" target="_blank" class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 dark:bg-gray-800/30 dark:border-gray-700/30 hover:bg-primary/20 transition-colors">
+                    <i class="uil uil-linkedin text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors"></i>
+                </a>
+                <a href="mailto:rupyesdahal12@gmail.com" class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 dark:bg-gray-800/30 dark:border-gray-700/30 hover:bg-primary/20 transition-colors">
+                    <i class="uil uil-envelope text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors"></i>
+                </a>
+                <a href="#" class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 dark:bg-gray-800/30 dark:border-gray-700/30 hover:bg-primary/20 transition-colors">
+                    <i class="uil uil-twitter text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors"></i>
+                </a>
+                </div>
             </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden xs:flex flex-col items-center animate-bounce-slow">
+            <span class="text-sm text-gray-500 dark:text-gray-400 mb-2">Scroll</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
         </section>
 
         <!-- About section -->
-        <section id="about" class="py-20 relative">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-tertiary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+        <section id="about" class="py-16 md:py-20 relative">
+            <div class="absolute top-0 right-0 w-72 h-72 md:w-96 md:h-96 bg-tertiary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
             
             <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
+                <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">About Me</h2>
                     <div class="w-20 h-1 bg-primary mx-auto"></div>
                 </div>
                 
-                <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                     <div class="relative">
-                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-secondary opacity-20 rounded-xl filter blur-xl"></div>
-                        <img src="assets/images/rup.jpg" alt="About Me" class="relative z-10 rounded-full shadow-xl">
-                        <div class="absolute -bottom-5 -right-5 w-40 h-40 rotate-circle">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-20 rounded-xl filter blur-xl"></div>
+                        <div class="relative z-10 rounded-full overflow-hidden shadow-xl w-full max-w-md mx-auto">
+                            <img src="assets/images/rup.jpg" alt="About Me" class="w-full h-auto">
+                        </div>
+                        <div class="absolute -bottom-5 -right-5 w-40 h-40 animate-spin-slow hidden sm:block">
                             <svg viewBox="0 0 200 200" width="120" height="120">
                                 <path fill="none" stroke="#6366f1" stroke-width="2" d="M100,10 A90,90 0 1,1 100,190 A90,90 0 1,1 100,10" />
                                 <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12" fill="#6366f1">Developer</text>
@@ -225,200 +502,216 @@
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4">Back-end Developer</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">I'm a passionate back-end developer with a keen intrest in making backend system.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">I'm a passionate back-end developer with a keen interest in making backend systems.</p>
                         <p class="text-gray-600 dark:text-gray-400 mb-6">With expertise in modern web technologies including Django/Django Rest, HTML, CSS, JavaScript. I bring designs to life with clean, efficient code and a focus on performance and accessibility.</p>
                         
-                        <div class="grid grid-cols-2 gap-4 mb-8">
-                            <div>
-                                <p><strong>Name:</strong> Rupesh Dahal</p>
-                                <p><strong>Email:</strong> rupyesdahal12@gmai.com</p>
-                                <p><strong>Location:</strong> Kathmandu, Nepal</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                            <div class="space-y-2">
+                                <p><span class="font-bold">Name:</span> Rupesh Dahal</p>
+                                <p><span class="font-bold">Email:</span> rupyesdahal12@gmail.com</p>
+                                <p><span class="font-bold">Location:</span> Kathmandu, Nepal</p>
                             </div>
-                            <div>
-                                <p><strong>Degree:</strong> Computer Science</p>
-                                <p><strong>Experience:</strong> Soon</p>
-                                <p><strong>Freelance:</strong> Available</p>
+                            <div class="space-y-2">
+                                <p><span class="font-bold">Degree:</span> Computer Science</p>
+                                <p><span class="font-bold">Experience:</span> Soon</p>
+                                <p><span class="font-bold">Freelance:</span> Available</p>
                             </div>
                         </div>
                         
-                        <a href="assets/Rupesh Dahal_cv.pdf.pdf" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center w-max">
+                        <a href="assets/Rupesh Dahal_cv.pdf.pdf" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all flex items-center w-max group">
                             <span>Download CV</span>
-                            <i class="uil uil-download-alt ml-2"></i>
+                            <i class="uil uil-download-alt ml-2 group-hover:translate-y-1 transition-transform duration-300"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Skills section -->
-        <section id="skills" class="skills-section">
-            <!-- Animated background elements -->
-            <div class="background-elements">
-                <div class="floating-shape shape-1"></div>
-                <div class="floating-shape shape-2"></div>
-                <div class="floating-shape shape-3"></div>
-                <div class="floating-shape shape-4"></div>
+<!-- Skills section -->
+<section id="skills" class="py-16 md:py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
+    <!-- Animated background elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute w-[300px] h-[300px] top-[-100px] left-[-100px] rounded-full bg-gradient-to-r from-primary to-secondary opacity-5 animate-float" style="animation-duration: 20s;"></div>
+        <div class="absolute w-[200px] h-[200px] bottom-[-50px] right-[-50px] rounded-full bg-gradient-to-r from-secondary to-primary opacity-5 animate-float" style="animation-duration: 15s; animation-direction: reverse;"></div>
+        <div class="absolute w-[150px] h-[150px] bottom-[30%] left-[10%] rounded-full bg-gradient-to-r from-tertiary to-secondary opacity-5 animate-float" style="animation-duration: 18s; animation-delay: 2s;"></div>
+        <div class="absolute w-[100px] h-[100px] top-[40%] right-[10%] rounded-full bg-gradient-to-r from-purple-500 to-primary opacity-5 animate-float" style="animation-duration: 12s; animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-12 md:mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 inline-block relative">
+                My Expertise
+                <div class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-primary to-secondary"></div>
+            </h2>
+            <p class="text-gray-300 mt-4 max-w-md mx-auto">Blending creativity with technical precision</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- Development Skills -->
+            <div class="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 md:p-8 border border-white/5 hover:border-primary/20 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
+                <h3 class="text-xl font-bold mb-6 pb-3 border-b border-white/10 relative">
+                    Development
+                    <div class="absolute left-0 bottom-[-1px] w-10 h-1 bg-primary"></div>
+                </h3>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 bg-primary/10 rotate-45 rounded-md"></div>
+                            <span class="absolute inset-0 flex items-center justify-center font-semibold text-primary z-10">&lt;/&gt;</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-xs sm:text-sm mb-1.5">HTML/CSS</h4>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary w-[95%] rounded-full transform origin-left transition-transform duration-1000 scale-0" data-width="95%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 bg-primary/10 rotate-45 rounded-md"></div>
+                            <span class="absolute inset-0 flex items-center justify-center font-semibold text-primary z-10">JS</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-xs sm:text-sm mb-1.5">JavaScript</h4>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary w-[50%] rounded-full transform origin-left transition-transform duration-1000 scale-0" data-width="50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 bg-primary/10 rotate-45 rounded-md"></div>
+                            <span class="absolute inset-0 flex items-center justify-center font-semibold text-primary z-10">DRF</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-xs sm:text-sm mb-1.5">Django/Django Rest Framework</h4>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary w-[70%] rounded-full transform origin-left transition-transform duration-1000 scale-0" data-width="70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">My Expertise</h2>
-                    <p class="section-subtitle">Blending creativity with technical precision</p>
-                </div>
-                
-                <div class="skills-categories">
-                    <!-- Development Skills -->
-                    <div class="skill-category">
-                        <h3 class="category-title">Development</h3>
-                        <div class="skills-container">
-                            <div class="skill-item" data-skill="html">
-                                <div class="skill-icon">
-                                    <div class="hexagon"></div>
-                                    <span class="skill-icon-text">&lt;/&gt;</span>
-                                </div>
-                                <div class="skill-info">
-                                    <h4>HTML/CSS</h4>
-                                    <div class="skill-level-bar">
-                                        <div class="skill-level" style="width: 95%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item" data-skill="JavaScript">
-                                <div class="skill-icon">
-                                    <div class="hexagon"></div>
-                                    <span class="skill-icon-text">JS</span>
-                                </div>
-                                <div class="skill-info">
-                                    <h4>JavaScript</h4>
-                                    <div class="skill-level-bar">
-                                        <div class="skill-level" style="width: 50%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item" data-skill="Django">
-                                <div class="skill-icon">
-                                    <div class="hexagon"></div>
-                                    <span class="skill-icon-text">DRF</span>
-                                </div>
-                                <div class="skill-info">
-                                    <h4>Django/Django Rest Framework</h4>
-                                    <div class="skill-level-bar">
-                                        <div class="skill-level" style="width: 70%"></div>
-                                    </div>
-                                </div>
+            <!-- Tools Skills -->
+            <div class="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 md:p-8 border border-white/5 hover:border-primary/20 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
+                <h3 class="text-xl font-bold mb-6 pb-3 border-b border-white/10 relative">
+                    Tools
+                    <div class="absolute left-0 bottom-[-1px] w-10 h-1 bg-primary"></div>
+                </h3>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 bg-primary/10 rotate-45 rounded-md"></div>
+                            <span class="absolute inset-0 flex items-center justify-center font-semibold text-primary z-10">Git</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-xs sm:text-sm mb-1.5">Git/GitHub</h4>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary w-[70%] rounded-full transform origin-left transition-transform duration-1000 scale-0" data-width="70%"></div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Design Skills -->
-                    <div class="skill-category">
-                        <h3 class="category-title">Tools</h3>
-                        <div class="skills-container">
-                            <div class="skill-item" data-skill="UX/UI">
-                                <div class="skill-icon">
-                                    <div class="hexagon"></div>
-                                    <span class="skill-icon-text">Git</span>
-                                </div>
-                                <div class="skill-info">
-                                    <h4>Git/GitHub</h4>
-                                    <div class="skill-level-bar">
-                                        <div class="skill-level" style="width: 70%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item" data-skill="Figma">
-                                <div class="skill-icon">
-                                    <div class="hexagon"></div>
-                                    <span class="skill-icon-text">P</span>
-                                </div>
-                                <div class="skill-info">
-                                    <h4>Postman</h4>
-                                    <div class="skill-level-bar">
-                                        <div class="skill-level" style="width: 60%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item" data-skill="CSS">
-                                <div class="skill-icon">
-                                    <div class="hexagon"></div>
-                                    <span class="skill-icon-text">F</span>
-                                </div>
-                                <div class="skill-info">
-                                    <h4>Figma</h4>
-                                    <div class="skill-level-bar">
-                                        <div class="skill-level" style="width: 40%"></div>
-                                    </div>
-                                </div>
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 bg-primary/10 rotate-45 rounded-md"></div>
+                            <span class="absolute inset-0 flex items-center justify-center font-semibold text-primary z-10">P</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-xs sm:text-sm mb-1.5">Postman</h4>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary w-[60%] rounded-full transform origin-left transition-transform duration-1000 scale-0" data-width="60%"></div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Professional Skills -->
-                    <div class="skill-category">
-                        <h3 class="category-title">Professional</h3>
-                        <div class="skills-grid">
-                            <div class="pro-skill-item">
-                                <div class="skill-radar">
-                                    <div class="radar-circle"></div>
-                                    <div class="radar-level" style="--percent: 70"></div>
-                                </div>
-                                <p>Problem Solving</p>
-                            </div>
-                            
-                            <div class="pro-skill-item">
-                                <div class="skill-radar">
-                                    <div class="radar-circle"></div>
-                                    <div class="radar-level" style="--percent: 70"></div>
-                                </div>
-                                <p>Communication</p>
-                            </div>
-                            
-                            <div class="pro-skill-item">
-                                <div class="skill-radar">
-                                    <div class="radar-circle"></div>
-                                    <div class="radar-level" style="--percent: 69"></div>
-                                </div>
-                                <p>Teamwork</p>
-                            </div>
-                            
-                            <div class="pro-skill-item">
-                                <div class="skill-radar">
-                                    <div class="radar-circle"></div>
-                                    <div class="radar-level" style="--percent: 75"></div>
-                                </div>
-                                <p>Project Management</p>
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-12 h-12 bg-primary/10 rotate-45 rounded-md"></div>
+                            <span class="absolute inset-0 flex items-center justify-center font-semibold text-primary z-10">F</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-xs sm:text-sm mb-1.5">Figma</h4>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary w-[40%] rounded-full transform origin-left transition-transform duration-1000 scale-0" data-width="40%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+            
+            <!-- Professional Skills -->
+            <div class="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 md:p-8 border border-white/5 hover:border-primary/20 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
+                <h3 class="text-xl font-bold mb-6 pb-3 border-b border-white/10 relative">
+                    Professional
+                    <div class="absolute left-0 bottom-[-1px] w-10 h-1 bg-primary"></div>
+                </h3>
+                <div class="grid grid-cols-2 gap-4 lg:gap-6 mt-2">
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20">
+                            <div class="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+                            <div class="absolute inset-0 rounded-full" style="background: conic-gradient(#6366f1 70%, transparent 0); clip-path: circle(50%);" data-percent="70"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold">70%</div>
+                        </div>
+                        <p class="mt-2 text-xs sm:text-sm text-center">Problem Solving</p>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20">
+                            <div class="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+                            <div class="absolute inset-0 rounded-full" style="background: conic-gradient(#6366f1 70%, transparent 0); clip-path: circle(50%);" data-percent="70"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold">70%</div>
+                        </div>
+                        <p class="mt-2 text-xs sm:text-sm text-center">Communication</p>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20">
+                            <div class="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+                            <div class="absolute inset-0 rounded-full" style="background: conic-gradient(#6366f1 69%, transparent 0); clip-path: circle(50%);" data-percent="69"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold">69%</div>
+                        </div>
+                        <p class="mt-2 text-xs sm:text-sm text-center">Teamwork</p>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20">
+                            <div class="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+                            <div class="absolute inset-0 rounded-full" style="background: conic-gradient(#6366f1 75%, transparent 0); clip-path: circle(50%);" data-percent="75"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold">75%</div>
+                        </div>
+                        <p class="mt-2 text-xs sm:text-sm text-center">Project Management</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- Projects section -->
-        <section id="projects" class="py-20 relative">
-            <div class="absolute bottom-0 left-0 w-96 h-96 bg-primary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+        <section id="projects" class="py-16 md:py-20 relative">
+            <div class="absolute bottom-0 left-0 w-72 h-72 md:w-96 md:h-96 bg-primary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
             
             <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
+                <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">My Projects</h2>
                     <div class="w-20 h-1 bg-primary mx-auto"></div>
                 </div>
                 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     <!-- Project 1 -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover-card card-glow transition-all duration-300 tilt-card">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
                         <div class="relative">
                             <img src="assets/images/ecommerce.png" alt="Project 1" class="w-full h-48 object-cover">
-                            <div class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-20 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-primary bg-opacity-20 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <div class="flex space-x-4">
-                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors transform hover:scale-110">
                                         <i class="uil uil-link"></i>
                                     </a>
-                                    <a href="https://github.com/rupeshdahal07/Ecommerse-Website" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank">
+                                    <a href="https://github.com/rupeshdahal07/Ecommerse-Website" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors transform hover:scale-110" target="_blank">
                                         <i class="uil uil-github"></i>
                                     </a>
                                 </div>
@@ -436,15 +729,15 @@
                     </div>
                     
                     <!-- Project 2 -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover-card card-glow transition-all duration-300 tilt-card">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
                         <div class="relative">
                             <img src="assets/images/climateaction.png" alt="Project 2" class="w-full h-48 object-cover">
-                            <div class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-20 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-primary bg-opacity-20 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <div class="flex space-x-4">
-                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors transform hover:scale-110">
                                         <i class="uil uil-link"></i>
                                     </a>
-                                    <a href="https://github.com/rupeshdahal07/climate_action" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank">
+                                    <a href="https://github.com/rupeshdahal07/climate_action" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors transform hover:scale-110" target="_blank">
                                         <i class="uil uil-github"></i>
                                     </a>
                                 </div>
@@ -462,16 +755,15 @@
                     </div>
                     
                     <!-- Project 3 -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover-card card-glow transition-all duration-300 tilt-card">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
                         <div class="relative">
-                            <!-- https://via.placeholder.com/600x400 -->
                             <img src="assets/images/portfolio.png" alt="Project 3" class="w-full h-48 object-cover">
-                            <div class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-20 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-primary bg-opacity-20 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <div class="flex space-x-4">
-                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    <a href="#" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors transform hover:scale-110">
                                         <i class="uil uil-link"></i>
                                     </a>
-                                    <a href="https://github.com/rupeshdahal07/portfolio_2025" target="_blank" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
+                                    <a href="https://github.com/rupeshdahal07/portfolio_2025" target="_blank" class="p-2 bg-white text-primary rounded-full hover:bg-primary hover:text-white transition-colors transform hover:scale-110">
                                         <i class="uil uil-github"></i>
                                     </a>
                                 </div>
@@ -491,25 +783,25 @@
                 </div>
                 
                 <div class="text-center mt-12">
-                    <a href="projects.html" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all inline-flex items-center">
+                    <a href="projects.html" class="px-6 py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all inline-flex items-center group">
                         <span>View All Projects</span>
-                        <i class="uil uil-arrow-right ml-2"></i>
+                        <i class="uil uil-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
                     </a>
                 </div>
             </div>
         </section>
         
         <!-- Contact section -->
-        <section id="contact" class="py-20 bg-gray-100 dark:bg-gray-800 relative">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-secondary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
+        <section id="contact" class="py-16 md:py-20 bg-gray-100 dark:bg-gray-800 relative">
+            <div class="absolute top-0 right-0 w-72 h-72 md:w-96 md:h-96 bg-secondary opacity-10 rounded-full filter blur-3xl animate-blob"></div>
             
             <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
+                <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">Get In Touch</h2>
                     <div class="w-20 h-1 bg-primary mx-auto"></div>
                 </div>
                 
-                <div class="grid md:grid-cols-2 gap-12">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12">
                     <div>
                         <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
                         
@@ -561,33 +853,33 @@
                         </div>
                     </div>
                     
-                    <div class="bg-white dark:bg-gray-900 rounded-xl p-8 shadow-lg">
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-6 md:p-8 shadow-lg">
                         <h3 class="text-2xl font-bold mb-6">Send Me a Message</h3>
                         
-                        <form>
+                        <form id="contact-form">
                             <div class="mb-6">
-                                <label for="name" class="block mb-2 font-medium">Name</label>
-                                <input type="text" id="name" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Name">
+                                <label for="name" class="block mb-2 font-medium text-sm">Name</label>
+                                <input type="text" id="name" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border-0" placeholder="Your Name">
                             </div>
                             
                             <div class="mb-6">
-                                <label for="email" class="block mb-2 font-medium">Email</label>
-                                <input type="email" id="email" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Email">
+                                <label for="email" class="block mb-2 font-medium text-sm">Email</label>
+                                <input type="email" id="email" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border-0" placeholder="Your Email">
                             </div>
                             
                             <div class="mb-6">
-                                <label for="subject" class="block mb-2 font-medium">Subject</label>
-                                <input type="text" id="subject" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Subject">
+                                <label for="subject" class="block mb-2 font-medium text-sm">Subject</label>
+                                <input type="text" id="subject" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border-0" placeholder="Subject">
                             </div>
                             
                             <div class="mb-6">
-                                <label for="message" class="block mb-2 font-medium">Message</label>
-                                <textarea id="message" rows="5" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Message"></textarea>
+                                <label for="message" class="block mb-2 font-medium text-sm">Message</label>
+                                <textarea id="message" rows="5" class="w-full p-3 bg-gray-100 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border-0" placeholder="Your Message"></textarea>
                             </div>
                             
-                            <button type="submit" class="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all flex items-center justify-center">
+                            <button type="submit" class="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all flex items-center justify-center group">
                                 <span>Send Message</span>
-                                <i class="uil uil-message ml-2"></i>
+                                <i class="uil uil-message ml-2 group-hover:translate-y-[-2px] transition-transform duration-300"></i>
                             </button>
                         </form>
                     </div>
@@ -601,7 +893,7 @@
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-3 gap-8">
                 <div>
-                    <h3 class="text-2xl font-bold mb-4 text-gradient">Developer</h3>
+                    <h3 class="text-2xl font-bold mb-4 bg-gradient-text">Developer</h3>
                     <p class="text-gray-400 mb-6">Creating elegant web solutions with a focus on user experience and performance.</p>
                     <div class="flex space-x-4">
                         <a href="https://github.com/rupeshdahal07" class="text-gray-400 hover:text-primary transition-colors">
@@ -656,92 +948,66 @@
     </footer>
     
     <!-- Back to top button -->
-    <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-primary text-white rounded-full shadow-lg opacity-0 invisible transition-all z-50">
+    <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-primary text-white rounded-full shadow-lg opacity-0 invisible transition-all z-50 hover:bg-opacity-90">
         <i class="uil uil-arrow-up text-lg"></i>
     </button>
     
     <!-- Scripts -->
     <script>
-        // Wait for the DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Page load animation
-            setTimeout(function() {
-                document.querySelector('.page-transition').classList.add('loaded');
-            }, 200);
-            
-            // Typed.js initialization
-            const typed = new Typed('#typed-text', {
+        // Replace all your current JavaScript with this improved version
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Cache DOM elements for better performance
+    const mainContent = document.getElementById('main-content');
+    const header = document.getElementById('main-header');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    const backToTopBtn = document.getElementById('back-to-top');
+    const cursorTrailer = document.getElementById('cursor-trailer');
+    const navIndicator = document.getElementById('nav-indicator');
+    const contactForm = document.getElementById('contact-form');
+    
+    // Show main content with slight delay for loading effect
+    setTimeout(() => mainContent.classList.remove('opacity-0', 'translate-y-5'), 200);
+    
+    // Initialize Typed.js with error handling
+    try {
+        const typedElement = document.getElementById('typed-text');
+        if (typedElement) {
+            new Typed('#typed-text', {
                 strings: ['Backend Developer', 'CS Student', 'AI Enthusiast'],
                 typeSpeed: 50,
                 backSpeed: 30,
                 backDelay: 2000,
-                loop: true
+                startDelay: 500,
+                loop: true,
+                showCursor: true,
+                cursorChar: '|'
             });
-
-            
-
-            
-            // Skill bar animation
-                // JavaScript to handle animations and counters
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Intersection Observer for revealing skills when scrolled into view
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                entry.target.classList.add('in-view');
-                                observer.unobserve(entry.target);
-                            }
-                        });
-                    }, { threshold: 0.2 });
-                    
-                    // Observe the skills section
-                    const skillsSection = document.querySelector('.skills-section');
-                    observer.observe(skillsSection);
-                    
-                    // Set tooltips for skill bars
-                    const skillLevelBars = document.querySelectorAll('.skill-level-bar');
-                    skillLevelBars.forEach(bar => {
-                        const level = bar.querySelector('.skill-level');
-                        const width = level.style.width;
-                        bar.setAttribute('data-tooltip', width);
-                    });
-                    
-                    // Optional: Add a counter animation for the professional skills
-                    const countElements = document.querySelectorAll('.radar-level');
-                    countElements.forEach(element => {
-                        const percent = element.style.getPropertyValue('--percent');
-                        const parent = element.closest('.pro-skill-item');
-                        const percentDisplay = document.createElement('span');
-                        percentDisplay.className = 'percent-display';
-                        percentDisplay.textContent = '0%';
-                        percentDisplay.style.position = 'absolute';
-                        percentDisplay.style.top = '50%';
-                        percentDisplay.style.left = '50%';
-                        percentDisplay.style.transform = 'translate(-50%, -50%)';
-                        percentDisplay.style.color = '#fff';
-                        percentDisplay.style.fontSize = '0.875rem';
-                        percentDisplay.style.fontWeight = 'bold';
-                        percentDisplay.style.zIndex = '2';
-                        
-                        element.parentNode.appendChild(percentDisplay);
-                        
-                        let current = 0;
-                        const interval = setInterval(() => {
-                            if (current >= percent) {
-                                clearInterval(interval);
-                            } else {
-                                current += 1;
-                                percentDisplay.textContent = `${current}%`;
-                            }
-                        }, 20);
-                    });
-                });
-
-
-
-
-            
-            // ScrollReveal initialization
+        }
+    } catch (error) {
+        console.error('Typed.js error:', error);
+    }
+    
+    // Handle skill bar animations using IntersectionObserver
+    const animateSkillBars = () => {
+        const skillBars = document.querySelectorAll('[data-width]');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    setTimeout(() => bar.style.transform = 'scaleX(1)', 200);
+                    observer.unobserve(bar);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        skillBars.forEach(bar => observer.observe(bar));
+    };
+    
+    // Initialize ScrollReveal for scroll animations
+    const initScrollReveal = () => {
+        try {
             const sr = ScrollReveal({
                 origin: 'bottom',
                 distance: '60px',
@@ -750,177 +1016,297 @@
                 reset: false
             });
             
-            sr.reveal('.container > div', {interval: 200});
-            sr.reveal('.card', {interval: 200});
-            sr.reveal('h2', {delay: 0});
-            sr.reveal('p', {delay: 300});
-            
-            // Parallax effect for elements with data-speed attribute
-            window.addEventListener('scroll', function() {
-                const parallaxElements = document.querySelectorAll('.parallax');
-                parallaxElements.forEach(element => {
-                    const speed = element.dataset.speed || 0.1;
-                    const yPos = -(window.pageYOffset * speed);
-                    element.style.transform = `translateY(${yPos}px)`;
-                });
-            });
-            
-            // Nav link highlight on scroll
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('header nav a');
-            
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    if (pageYOffset >= sectionTop - sectionHeight / 3) {
-                        current = section.getAttribute('id');
-                    }
-                });
-                
-                navLinks.forEach(link => {
-                    link.classList.remove('active-link');
-                    if (link.getAttribute('href').substring(1) === current) {
-                        link.classList.add('active-link');
-                    }
-                });
-            });
-            
-            // 3D tilt effect for cards
-            const tiltCards = document.querySelectorAll('.tilt-card');
-            tiltCards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const cardRect = card.getBoundingClientRect();
-                    const centerX = cardRect.left + cardRect.width / 2;
-                    const centerY = cardRect.top + cardRect.height / 2;
-                    const posX = e.clientX - centerX;
-                    const posY = e.clientY - centerY;
-                    
-                    const rotateX = posY * -0.05;
-                    const rotateY = posX * 0.05;
-                    
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                });
-            });
-            
-            // Theme toggle
-            const themeToggle = document.getElementById('theme-toggle');
-            const htmlElement = document.documentElement;
-            
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                htmlElement.classList.add('dark');
+            // Apply reveal animations to different sections
+            sr.reveal('#hero-text', { origin: 'left' });
+            sr.reveal('#hero-image', { origin: 'right', delay: 300 });
+            sr.reveal('#about h2', { origin: 'top' });
+            sr.reveal('#skills h2', { origin: 'top' });
+            sr.reveal('#projects h2', { origin: 'top' });
+            sr.reveal('#contact h2', { origin: 'top' });
+            sr.reveal('.grid > div', { interval: 200 });
+        } catch (error) {
+            console.error('ScrollReveal error:', error);
+        }
+    };
+    
+    // Handle active navigation indication
+    const handleNavHighlight = () => {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('header nav a');
+        
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                current = section.getAttribute('id');
             }
+        });
+        
+        navLinks.forEach(link => {
+            // Remove active classes
+            link.classList.remove('text-primary', 'after:scale-x-100');
+            link.classList.add('after:scale-x-0');
             
-            themeToggle.addEventListener('click', () => {
-                htmlElement.classList.toggle('dark');
-                localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
-            });
+            // Add active classes to current section link
+            const href = link.getAttribute('href')?.substring(1);
+            if (href === current) {
+                link.classList.add('text-primary', 'after:scale-x-100');
+                link.classList.remove('after:scale-x-0');
+            }
+        });
+    };
+    
+    // Update navigation indicator position
+    const updateNavIndicator = () => {
+        if (!navIndicator) return;
+        
+        const navLinks = document.querySelectorAll('.nav-link');
+        let current = '';
+        const sections = document.querySelectorAll('section');
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('text-primary', 'font-medium');
+            const href = link.getAttribute('href')?.substring(1);
             
-            // Mobile menu
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const closeMenuBtn = document.getElementById('close-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-            
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.remove('translate-x-full');
-                mobileMenu.classList.add('translate-x-0');
-            });
-            
-            closeMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.remove('translate-x-0');
-                mobileMenu.classList.add('translate-x-full');
-            });
-            
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.remove('translate-x-0');
-                    mobileMenu.classList.add('translate-x-full');
-                });
-            });
-            
-            // Back to top button
-            const backToTopBtn = document.getElementById('back-to-top');
-            
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopBtn.classList.remove('opacity-0', 'invisible');
-                    backToTopBtn.classList.add('opacity-100', 'visible');
+            if (href === current) {
+                link.classList.add('text-primary', 'font-medium');
+                navIndicator.style.width = `${link.offsetWidth}px`;
+                navIndicator.style.transform = `translateX(${link.offsetLeft - 4}px)`;
+            }
+        });
+    };
+    
+    // Handle header appearance on scroll
+    let lastScrollY = window.scrollY;
+    const handleHeaderScroll = () => {
+        // Add/remove classes based on scroll position
+        if (window.scrollY > 100) {
+            header.classList.add('py-2', 'bg-white/50', 'dark:bg-gray-900/50', 'backdrop-blur-lg', 'shadow-lg');
+        } else {
+            header.classList.remove('py-2', 'bg-white/50', 'dark:bg-gray-900/50', 'backdrop-blur-lg', 'shadow-lg');
+        }
+        
+        // Always keep header visible (fixed mobile menu bug)
+        header.style.transform = 'translateY(0)';
+
+        // Update last scroll position
+        lastScrollY = window.scrollY;
+    };
+    
+    // Handle theme toggle functionality
+    const handleThemeToggle = () => {
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // Apply saved theme or system preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        }
+        
+        // Toggle theme on button click
+        themeToggle?.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+    };
+    
+    // Mobile menu functionality
+    const handleMobileMenu = () => {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuContent = mobileMenu?.querySelector('.relative');
+        
+        if (!mobileMenuBtn || !closeMenuBtn || !mobileMenu) {
+            console.error('Mobile menu elements not found');
+            return;
+        }
+        
+        // Ensure menu is properly sized to screen height
+        const resizeMenu = () => {
+            if (mobileMenuContent) {
+                mobileMenuContent.style.maxHeight = `${window.innerHeight}px`;
+            }
+        };
+        
+        // Call on init and window resize
+        resizeMenu();
+        window.addEventListener('resize', resizeMenu);
+        
+        // Pause animations when menu is open for better performance
+        const toggleAnimations = (pause) => {
+            const animatedElements = document.querySelectorAll('.animate-blob, .animate-float, .animate-morph');
+            animatedElements.forEach(el => {
+                if (pause) {
+                    el.style.animationPlayState = 'paused';
                 } else {
-                    backToTopBtn.classList.remove('opacity-100', 'visible');
-                    backToTopBtn.classList.add('opacity-0', 'invisible');
+                    el.style.animationPlayState = 'running';
                 }
             });
-            
-            backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Scroll indicator
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            
-            window.addEventListener('scroll', () => {
-                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (winScroll / height) * 100;
-                scrollIndicator.style.width = scrolled + '%';
-            });
-            
-            // Mouse cursor trailer effect
-            const cursorTrailer = document.querySelector('.cursor-trailer');
-            const links = document.querySelectorAll('a, button');
-            
-            if (window.innerWidth > 768) {
-                cursorTrailer.style.display = 'block';
-                
-                document.addEventListener('mousemove', (e) => {
-                    cursorTrailer.style.left = e.clientX + 'px';
-                    cursorTrailer.style.top = e.clientY + 'px';
-                });
-                
-                links.forEach(link => {
-                    link.addEventListener('mouseenter', () => {
-                        cursorTrailer.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                        cursorTrailer.style.backgroundColor = 'rgba(99, 102, 241, 0.3)';
-                    });
-                    
-                    link.addEventListener('mouseleave', () => {
-                        cursorTrailer.style.transform = 'translate(-50%, -50%) scale(1)';
-                        cursorTrailer.style.backgroundColor = 'rgba(99, 102, 241, 0.5)';
-                    });
-                });
+        };
+        
+        // Open mobile menu with slide-in animation
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            header.style.transform = 'translateY(0)';
+            mobileMenu.classList.remove('translate-x-full');
+            mobileMenu.classList.add('translate-x-0');
+            document.body.style.overflow = 'hidden';
+            resizeMenu();
+            toggleAnimations(true); // Pause animations
+        });
+        
+        // Close mobile menu
+        const closeMenu = () => {
+            mobileMenu.classList.remove('translate-x-0');
+            mobileMenu.classList.add('translate-x-full');
+            document.body.style.overflow = '';
+            toggleAnimations(false); // Resume animations
+        };
+        
+        // Setup close button
+        closeMenuBtn.addEventListener('click', closeMenu);
+        
+        // Close menu when clicking menu links
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+    };
+    
+    // Back to top button functionality
+    const handleBackToTop = () => {
+        if (!backToTopBtn) return;
+        
+        // Show/hide back to top button based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'invisible');
+                backToTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopBtn.classList.remove('opacity-100', 'visible');
+                backToTopBtn.classList.add('opacity-0', 'invisible');
             }
-            
-            // Contact form
-            const contactForm = document.querySelector('form');
-            
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // Form validation logic here
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const subject = document.getElementById('subject').value;
-                const message = document.getElementById('message').value;
-                
-                if (name && email && subject && message) {
-                    // Here you would typically send the form data to a server
-                    alert('Thank you for your message! I will get back to you soon.');
-                    contactForm.reset();
-                } else {
-                    alert('Please fill in all fields.');
-                }
+        });
+        
+        // Scroll to top when clicking the button
+        backToTopBtn.addEventListener('click', () => {
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
+    };
+    
+    // Scroll indicator update
+    const updateScrollIndicator = () => {
+        if (!scrollIndicator) return;
+        
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        scrollIndicator.style.width = scrolled + '%';
+    };
+    
+    // Mouse cursor trailer effect
+    const handleCursorTrailer = () => {
+        if (!cursorTrailer || window.innerWidth <= 768) return;
+        
+        const links = document.querySelectorAll('a, button');
+        
+        document.addEventListener('mousemove', (e) => {
+            requestAnimationFrame(() => {
+                cursorTrailer.style.left = e.clientX + 'px';
+                cursorTrailer.style.top = e.clientY + 'px';
+            });
+        });
+        
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursorTrailer.classList.add('scale-150');
+                cursorTrailer.style.backgroundColor = 'rgba(99, 102, 241, 0.3)';
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                cursorTrailer.classList.remove('scale-150');
+                cursorTrailer.style.backgroundColor = 'rgba(99, 102, 241, 0.5)';
+            });
+        });
+    };
+    
+    // Contact form validation and submission
+    const handleContactForm = () => {
+        if (!contactForm) return;
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name')?.value;
+            const email = document.getElementById('email')?.value;
+            const subject = document.getElementById('subject')?.value;
+            const message = document.getElementById('message')?.value;
+            
+            // Simple validation
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Here you would normally send the form data to a server
+            console.log('Form submitted:', { name, email, subject, message });
+            alert('Message sent successfully!');
+            contactForm.reset();
+        });
+    };
+    
+    // Setup event listeners for scroll events
+    const setupScrollListeners = () => {
+        window.addEventListener('scroll', () => {
+            handleHeaderScroll();
+            handleNavHighlight();
+            updateNavIndicator();
+            updateScrollIndicator();
+        });
+    };
+    
+    // Initialize all functions
+    const init = () => {
+        animateSkillBars();
+        initScrollReveal();
+        handleNavHighlight();
+        updateNavIndicator();
+        handleHeaderScroll();
+        handleThemeToggle();
+        handleMobileMenu();
+        handleBackToTop();
+        handleCursorTrailer();
+        handleContactForm();
+        setupScrollListeners();
+    };
+    
+    // Run initialization
+    init();
+});
     </script>
+    <!-- Make sure no other script tag is missing a closing tag -->
 </body>
 </html>
